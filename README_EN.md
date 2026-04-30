@@ -135,7 +135,7 @@ Variables used
 
 Koyeb
 
-[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=docker&name=nezha&ports=80;http;/&env[GH_USER]=&env[GH_CLIENTID]=&env[GH_CLIENTSECRET]=&env[GH_REPO]=&env[GH_EMAIL]=&env[GH_PAT]=&env[ARGO_AUTH]=&env[ARGO_DOMAIN]=&image=docker.io/fscarmen/argo-nezha)
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=docker&name=nezha&ports=80;http;/&env[GH_USER]=&env[GH_CLIENTID]=&env[GH_CLIENTSECRET]=&env[GH_REPO]=&env[GH_EMAIL]=&env[GH_PAT]=&env[ARGO_AUTH]=&env[ARGO_DOMAIN]=&image=docker.io/lgpay/argo-nezha)
 
 <img width="927" alt="image" src="https://user-images.githubusercontent.com/92626977/231088411-fbac3e6e-a8a6-4661-bcf8-7c777aa8ffeb.png">
 <img width="1011" alt="image" src="https://github.com/fscarmen2/Argo-Nezha-Service-Container/assets/92626977/61fad972-1be9-4e8d-829a-8faea0c8ed64">
@@ -148,6 +148,9 @@ Koyeb
 * Note: ARGO_DOMAIN= must be followed by single quotes, which cannot be removed.
 * If the VPS is IPv6 only, please install WARP IPv4 or dual-stack first: https://github.com/fscarmen/warp
 * The backup directory is the dashboard folder in the current path.
+* This fork's Docker image now uses the repository-bundled local `init.sh` instead of downloading the upstream remote `init.sh` at container startup.
+* The Docker image is published as multi-arch and supports `linux/amd64` and `linux/arm64`.
+* The frontend static asset CDN is kept at `https://cdn.staticfile.org/` to avoid theme-switch failures caused by `lf6-cdn-tos.bytecdntp.com` connectivity issues.
 
 ### docker deployment
 
@@ -162,13 +165,13 @@ docker run -dit \
            -e GH_REPO=<fill in customized> \
            -e GH_CLIENTID=<fill in acquired> \
            -e GH_CLIENTSECRET=<fill in acquired> \
-           -e ARGO_AUTH='<Fill in the fetched Argo json or token>' \
+           -e ARGO_AUTH='<fill in the fetched Argo json or token>' \
            -e ARGO_DOMAIN=<fill in customized> \
            -e GH_BACKUP_USER=<Optional, Optional, Optional! If it is consistent with GH_USER, you can leave it blank> \
            -e REVERSE_PROXY_MODE=<Optional, Optional, Optional! If you want to use Nginx or gRPCwebProxy instead of Caddy for reverse proxying, set this value to `nginx` or `grpcwebproxy`> \
-           -e NO_AUTO_RENEW=<Optional, Optional, Optional! If you don't need synchronized online, set this variable and assign it a value of `1`>
-           -e DASHBOARD_VERSION=<Specify the version of dashboard, in the format of `v0.00.00`. Nezha dashboard will be fixed at this version and will not be upgraded, if you don't fill in the blank, it will use the default `v0.20.13`> \
-           fscarmen/argo-nezha
+           -e NO_AUTO_RENEW=<Optional, Optional, Optional! If you don't need synchronized online, set this variable and assign it a value of `1`> \
+           -e DASHBOARD_VERSION=<Specify the version of dashboard, in the format of `v0.00.00`. Nezha dashboard will be fixed at this version and will not be upgraded, if you leave it blank, the default `v0.20.13` will be used> \
+           lgpay/argo-nezha
 ```
 
 ### docker-compose deployment
@@ -178,7 +181,7 @@ networks:
         name: nezha-dashboard
 services.
     argo-nezha.
-        image: fscarmen/argo-nezha
+        image: lgpay/argo-nezha
         pull_policy: always
         container_name: nezha_dashboard
         restart: always
@@ -202,7 +205,7 @@ services.
 
 ## VPS Deployment Method 2 --- hosts
 ```
-bash <(wget -qO- https://raw.githubusercontent.com/fscarmen2/Argo-Nezha-Service-Container/main/dashboard.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/lgpay/Argo-Nezha-Service-Container/main/dashboard.sh)
 ```
 
 

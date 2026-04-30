@@ -10,6 +10,8 @@ if [ ! -s /etc/supervisor/conf.d/damon.conf ]; then
   WEB_PORT=80
   CADDY_HTTP_PORT=2052
   WORK_DIR=/dashboard
+  STATICFILE_OLD_CDN='https://cdn.staticfile.org/'
+  STATICFILE_NEW_CDN='https://cdn.staticfile.org/'
 
   # 如不分离备份的 github 账户，默认与哪吒登陆的 github 账户一致
   GH_BACKUP_USER=${GH_BACKUP_USER:-$GH_USER}
@@ -17,6 +19,18 @@ if [ ! -s /etc/supervisor/conf.d/damon.conf ]; then
   error() { echo -e "\033[31m\033[01m$*\033[0m" && exit 1; } # 红色
   info() { echo -e "\033[32m\033[01m$*\033[0m"; }   # 绿色
   hint() { echo -e "\033[33m\033[01m$*\033[0m"; }   # 黄色
+
+  replace_staticfile_cdn() {
+    local target_dir=$1
+    [ ! -d "$target_dir" ] && return 0
+    local matched_files
+    matched_files=$(grep -rlF "$STATICFILE_OLD_CDN" "$target_dir" 2>/dev/null || true)
+    [ -z "$matched_files" ] && return 0
+    info " Detected deprecated StaticFile CDN references, replacing them with ${STATICFILE_NEW_CDN} "
+    while IFS= read -r file; do
+      [ -n "$file" ] && sed -i "s|$STATICFILE_OLD_CDN|$STATICFILE_NEW_CDN|g" "$file"
+    done <<< "$matched_files"
+  }
 
   # 如参数不齐全，容器退出，另外处理某些环境变量填错后的处理
   [[ -z "$GH_USER" || -z "$GH_CLIENTID" || -z "$GH_CLIENTSECRET" || -z "$ARGO_AUTH" || -z "$ARGO_DOMAIN" ]] && error " There are variables that are not set. "
@@ -173,6 +187,7 @@ EOF
   fi
 
   unzip -o /tmp/dashboard.zip -d /tmp
+  [ -d /tmp/dist ] && replace_staticfile_cdn /tmp/dist
   [ -d /tmp/dist ] && mv /tmp/dist/dashboard-linux-$ARCH /tmp/dashboard-linux-$ARCH
   chmod +x /tmp/dashboard-linux-$ARCH
   mv -f /tmp/dashboard-linux-$ARCH $WORK_DIR/app

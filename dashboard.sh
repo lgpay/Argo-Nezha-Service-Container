@@ -8,6 +8,8 @@ WORK_DIR='/opt/nezha/dashboard'
 TEMP_DIR='/tmp/nezha'
 START_PORT='5000'
 NEED_PORTS=4 # web , gRPC , gRPC proxy, caddy http
+STATICFILE_OLD_CDN='https://cdn.staticfile.org/'
+STATICFILE_NEW_CDN='https://cdn.staticfile.org/'
 
 trap "rm -rf $TEMP_DIR; echo -e '\n' ;exit" INT QUIT TERM EXIT
 
@@ -109,6 +111,18 @@ info() { echo -e "\033[32m\033[01m$*\033[0m"; }   # 绿色
 hint() { echo -e "\033[33m\033[01m$*\033[0m"; }   # 黄色
 reading() { read -rp "$(info "$1")" "$2"; }
 text() { grep -q '\$' <<< "${E[$*]}" && eval echo "\$(eval echo "\${${L}[$*]}")" || eval echo "\${${L}[$*]}"; }
+
+replace_staticfile_cdn() {
+  local target_dir=$1
+  [ ! -d "$target_dir" ] && return 0
+  local matched_files
+  matched_files=$(grep -rlF "$STATICFILE_OLD_CDN" "$target_dir" 2>/dev/null || true)
+  [ -z "$matched_files" ] && return 0
+  info " Detected deprecated StaticFile CDN references, replacing them with ${STATICFILE_NEW_CDN} "
+  while IFS= read -r file; do
+    [ -n "$file" ] && sed -i "s|$STATICFILE_OLD_CDN|$STATICFILE_NEW_CDN|g" "$file"
+  done <<< "$matched_files"
+}
 
 # 选择中英语言
 select_language() {
@@ -462,6 +476,7 @@ EOF
   # unzip 解压面板主应用
   if [ "$STATUS" = "$(text 26)" ]; then
     unzip -o -q $TEMP_DIR/dashboard.zip -d $TEMP_DIR 2>&1
+    [ -d $TEMP_DIR/dist ] && replace_staticfile_cdn $TEMP_DIR/dist
     [ -d /tmp/dist ] && mv $TEMP_DIR/dist/dashboard-linux-$ARCH $TEMP_DIR/dashboard-linux-$ARCH && rm -rf $TEMP_DIR/dist
     chmod +x $TEMP_DIR/dashboard-linux-$ARCH 2>&1
     mv -f $TEMP_DIR/dashboard-linux-$ARCH $TEMP_DIR/app >/dev/null 2>&1

@@ -133,7 +133,7 @@ Argo 隧道认证方式有 json 和 token，使用两个方式其中之一。推
 
 Koyeb
 
-[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=docker&name=nezha&ports=80;http;/&env[GH_USER]=&env[GH_CLIENTID]=&env[GH_CLIENTSECRET]=&env[GH_REPO]=&env[GH_EMAIL]=&env[GH_PAT]=&env[ARGO_AUTH]=&env[ARGO_DOMAIN]=&image=docker.io/fscarmen/argo-nezha)
+[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=docker&name=nezha&ports=80;http;/&env[GH_USER]=&env[GH_CLIENTID]=&env[GH_CLIENTSECRET]=&env[GH_REPO]=&env[GH_EMAIL]=&env[GH_PAT]=&env[ARGO_AUTH]=&env[ARGO_DOMAIN]=&image=docker.io/lgpay/argo-nezha)
 
 <img width="927" alt="image" src="https://user-images.githubusercontent.com/92626977/231088411-fbac3e6e-a8a6-4661-bcf8-7c777aa8ffeb.png">
 <img width="750" alt="image" src="https://user-images.githubusercontent.com/92626977/231088973-7134aefd-4c80-4559-8e40-17c3be11d27d.png">
@@ -146,6 +146,9 @@ Koyeb
 * 注意: ARGO_DOMAIN= 后面需要有单引号，不能去掉
 * 如果 VPS 是 IPv6 only 的，请先安装 WARP IPv4 或者双栈: https://gitlab.com/fscarmen/warp
 * 备份目录为当前路径的 dashboard 文件夹
+* 本 fork 的 Docker 镜像入口改为使用仓库内置的本地 `init.sh`，不再在容器启动时拉取上游远程 `init.sh`
+* Docker 镜像已发布为多架构，支持 `linux/amd64` 和 `linux/arm64`
+* 默认把前端静态资源 CDN 保持为 `https://cdn.staticfile.org/`，避免切换主题后访问 `lf6-cdn-tos.bytecdntp.com` 失败
 
 ### docker 部署
 
@@ -159,14 +162,14 @@ docker run -dit \
            -e GH_PAT=<填获取的> \
            -e GH_REPO=<填自定义的> \
            -e GH_CLIENTID=<填获取的>  \
-           -e GH_CLIENTSECRET=<填获取的> \
-           -e ARGO_AUTH='<填获取的 Argo json 或者 token>' \
+           -e GH_CLIENTSECRET=*** \
+           -e ARGO_AUTH=*** Argo json 或者 token>' \
            -e ARGO_DOMAIN=<填自定义的> \
            -e GH_BACKUP_USER=<选填，选填，选填! 如与 GH_USER 一致，可以不要该环境变量> \
            -e REVERSE_PROXY_MODE=<选填，选填，选填! 如想用 Nginx 或 gRPCwebProxy 替代 Caddy 反代的话，请设置该变量并赋值为 `nginx` 或 `grpcwebproxy`> \
            -e NO_AUTO_RENEW=<选填，选填，选填! 如果不需要自动在线同步最新的 backup.sh 和 restore.sh，请设置该变量并赋值为 `1`> \
            -e DASHBOARD_VERSION=<选填，选填，选填! 指定面板的版本，以 `v0.00.00` 的格式，后续将固定在该版本不会升级，不填则使用默认的 `v0.20.13`> \
-           fscarmen/argo-nezha
+           lgpay/argo-nezha
 ```
 
 ### docker-compose 部署
@@ -176,7 +179,7 @@ networks:
         name: nezha-dashboard
 services:
     argo-nezha:
-        image: fscarmen/argo-nezha
+        image: lgpay/argo-nezha
         pull_policy: always
         container_name: nezha_dashboard
         restart: always
@@ -200,7 +203,7 @@ services:
 
 ## VPS 部署方式 2 --- 宿主机
 ```
-bash <(wget -qO- https://raw.githubusercontent.com/fscarmen2/Argo-Nezha-Service-Container/main/dashboard.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/lgpay/Argo-Nezha-Service-Container/main/dashboard.sh)
 ```
 
 
