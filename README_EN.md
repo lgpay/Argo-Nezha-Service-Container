@@ -2,7 +2,7 @@
 
 Nezha server over Argo tunnel
 
-Documentation: English version | [中文版](https://github.com/fscarmen2/Argo-Nezha-Service-Container/blob/main/README.md)
+Documentation: English version | [中文版](https://github.com/lgpay/Argo-Nezha-Service-Container/blob/main/README.md)
 
 * * * *
 
@@ -115,7 +115,7 @@ Argo tunnel authentication methods include json and token, use one of the two me
 
 
 ## PaaS Deployment Example
-Image `fscarmen/argo-nezha:latest`, supports amd64 and arm64 architectures.
+Image `lgpay/argo-nezha:latest`, supports amd64 and arm64 architectures.
 
 Variables used
   | Variable Name | Required | Remarks |
@@ -293,6 +293,10 @@ tar czvf dashboard.tar.gz /dashboard
 `-- nezha-agent          # Nezha client, used to monitor the localhost.
 ```
 
+
+> Maintained fork: `lgpay/Argo-Nezha-Service-Container`; default container image: `lgpay/argo-nezha`.
+>
+> Runtime assets such as `sqlite.db`, template scripts, and `grpcwebproxy` release artifacts now point to this fork.
 
 ## Acknowledgements for articles and projects by
 * Robin, an enthusiastic sunrise crowd, for discussing the relationship between Nezha's server and client, which led to the birth of this project.

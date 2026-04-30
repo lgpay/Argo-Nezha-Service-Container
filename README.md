@@ -2,7 +2,7 @@
 
 使用 Argo 隧道的哪吒服务端
 
-Documentation: [English version](https://github.com/fscarmen2/Argo-Nezha-Service-Container/blob/main/README_EN.md) | 中文版
+Documentation: [English version](https://github.com/lgpay/Argo-Nezha-Service-Container/blob/main/README_EN.md) | 中文版
 
 * * *
 
@@ -113,7 +113,7 @@ Argo 隧道认证方式有 json 和 token，使用两个方式其中之一。推
 
 
 ## PaaS 部署实例
-镜像 `fscarmen/argo-nezha:latest` ， 支持 amd64 和 arm64 架构
+镜像 `lgpay/argo-nezha:latest` ，支持 amd64 和 arm64 架构
 
 用到的变量
   | 变量名        | 是否必须  | 备注 |
@@ -289,6 +289,10 @@ tar czvf dashboard.tar.gz /dashboard
 `-- nezha-agent          # 哪吒客户端，用于监控本地 localhost
 ```
 
+
+> 当前维护分支：`lgpay/Argo-Nezha-Service-Container`，默认容器镜像：`lgpay/argo-nezha`。
+>
+> 运行时所需的 `sqlite.db`、模板脚本与 `grpcwebproxy` 发布资源均已切换为当前 fork 仓库地址。
 
 ## 鸣谢下列作者的文章和项目:
 * 热心的朝阳群众 Robin，讨论哪吒服务端与客户端的关系，从而诞生了此项目
