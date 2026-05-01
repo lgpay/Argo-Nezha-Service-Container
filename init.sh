@@ -139,9 +139,9 @@ EOF
 
     # 比较版本号
     if [ "$VERSION_NUM" = "0.20.13" ]; then
-      # 版本 = 0.20.13：从 nap0o/nezha-dashboard 下载
-      if wget -q --spider ${GH_PROXY}https://github.com/nap0o/nezha-dashboard/releases/download/v0.20.13/dashboard-linux-$ARCH.zip 2>/dev/null; then
-        wget -O /tmp/dashboard.zip ${GH_PROXY}https://github.com/nap0o/nezha-dashboard/releases/download/v0.20.13/dashboard-linux-$ARCH.zip
+      # 版本 = 0.20.13：从 lgpay/nezha-dashboard 下载定制版
+      if wget -q --spider ${GH_PROXY}https://github.com/lgpay/nezha-dashboard/releases/download/v0.20.13-lgpay.1/dashboard-linux-$ARCH.zip 2>/dev/null; then
+        wget -O /tmp/dashboard.zip ${GH_PROXY}https://github.com/lgpay/nezha-dashboard/releases/download/v0.20.13-lgpay.1/dashboard-linux-$ARCH.zip
       else
         # 版本不存在，使用 railzen/nezha-zero 最新版本
         LATEST_VERSION=$(wget -qO- ${GH_PROXY}https://api.github.com/repos/railzen/nezha-zero/releases/latest | awk -F '"' '/"tag_name"/{print $4}')
