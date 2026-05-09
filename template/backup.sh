@@ -99,14 +99,14 @@ if [[ "${DASHBOARD_UPDATE}${CLOUDFLARED_UPDATE}${IS_BACKUP}${FORCE_UPDATE}" =~ t
 
     # 比较版本号
     if [ "$VERSION_NUM" = "0.20.13" ]; then
-      # 版本 = 0.20.13：从 nap0o/nezha-dashboard 下载
-      if wget -q --spider ${GH_PROXY}https://github.com/nap0o/nezha-dashboard/releases/download/$DASHBOARD_LATEST/dashboard-linux-$ARCH.zip 2>/dev/null; then
+      # 版本 = 0.20.13：从 lgpay/nezha-dashboard 下载
+      if wget -q --spider ${GH_PROXY}https://github.com/lgpay/nezha-dashboard/releases/download/$DASHBOARD_LATEST/dashboard-linux-$ARCH.zip 2>/dev/null; then
         hint "\n Renew dashboard app to $DASHBOARD_LATEST \n"
-        wget -O /tmp/dashboard.zip ${GH_PROXY}https://github.com/nap0o/nezha-dashboard/releases/download/$DASHBOARD_LATEST/dashboard-linux-$ARCH.zip
+        wget -O /tmp/dashboard.zip ${GH_PROXY}https://github.com/lgpay/nezha-dashboard/releases/download/$DASHBOARD_LATEST/dashboard-linux-$ARCH.zip
       else
         # 版本不存在，使用 railzen/nezha-zero 最新版本
         DASHBOARD_LATEST=$(wget -qO- ${GH_PROXY}https://api.github.com/repos/railzen/nezha-zero/releases/latest | awk -F '"' '/"tag_name"/{print $4}')
-        [ -n "$DASHBOARD_LATEST" ] && hint "\n Renew dashboard app to $DASHBOARD_LATEST \n" && wget -O /tmp/dashboard.zip ${GH_PROXY}https://github.com/railzen/nezha-zero/releases/download/$DASHBOARD_LATEST/dashboard-linux-$ARCH.zip || error "Failed to download dashboard"
+        [ -n "$DASHBOARD_LATEST" ] && hint "\n Renew dashboard app to $DASHBOARD_LATEST \n" && wget -O /tmp/dashboard.zip ${GH_PROXY}https://github.com/railzen/nezha-zero/releases/download/$DASHBOARD_LATEST/dashboard-linux-$ARCH.zip || error "Failed to download dashboard" 
       fi
     elif [ "$(printf '%s\n%s' "$VERSION_NUM" "0.20.13" | sort -V | head -n1)" = "$VERSION_NUM" ]; then
       # 版本 < 0.20.13：从 naiba/nezha 下载
